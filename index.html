@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Registro de Postulante / Empleado</h2>
+        
+        <form id="registroForm" class="space-y-4" onsubmit="handleSubmit(event)">
+            <!-- Nombre y Apellidos -->
+            <div>
+                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre y Apellidos</label>
+                <input type="text" id="nombre" name="nombre" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Ej. Juan Pérez Gómez">
+            </div>
+
+            <!-- Edad -->
+            <div>
+                <label for="edad" class="block text-sm font-medium text-gray-700 mb-1">Edad</label>
+                <input type="number" id="edad" name="edad" min="1" max="120" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Ej. 28">
+            </div>
+
+            <!-- Fecha de Nacimiento -->
+            <div>
+                <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div>
+                <label for="correo" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="correo@ejemplo.com">
+            </div>
+
+            <!-- Puesto -->
+            <div>
+                <label for="puesto" class="block text-sm font-medium text-gray-700 mb-1">Puesto</label>
+                <input type="text" id="puesto" name="puesto" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Ej. Desarrollador Web">
+            </div>
+
+            <!-- Botón de Envío -->
+            <button type="submit"
+                class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition duration-200 shadow-md">
+                Enviar Formulario
+            </button>
+        </form>
+
+        <!-- Mensaje de éxito -->
+        <div id="mensajeExito" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded-lg text-center font-medium">
+            ¡Formulario enviado con éxito!
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Aquí puedes procesar los datos o enviarlos a un servidor
+            const formData = {
+                nombre: document.getElementById('nombre').value,
+                edad: document.getElementById('edad').value,
+                fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                correo: document.getElementById('correo').value,
+                puesto: document.getElementById('puesto').value
+            };
+
+            console.log('Datos del formulario:', formData);
+
+            // Mostrar mensaje de éxito y limpiar formulario
+            document.getElementById('mensajeExito').classList.remove('hidden');
+            document.getElementById('registroForm').reset();
+
+            setTimeout(() => {
+                document.getElementById('mensajeExito').classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
