@@ -3,90 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Registro</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Dashboard Control de Ventas - Solis Enterprises</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Registro de Postulante / Empleado</h2>
-        
-        <form id="registroForm" class="space-y-4" onsubmit="handleSubmit(event)">
-            <!-- Nombre y Apellidos -->
-            <div>
-                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre y Apellidos</label>
-                <input type="text" id="nombre" name="nombre" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="Ej. Juan Pérez Gómez">
+<body class="bg-slate-100 font-sans antialiased flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between border-r border-slate-800 shrink-0">
+        <div>
+            <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
+                <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-rocket text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-base leading-tight">Control Ventas</h1>
+                    <span class="text-xs text-blue-400 font-semibold tracking-wider">Solis Enterprises</span>
+                </div>
             </div>
 
-            <!-- Edad -->
-            <div>
-                <label for="edad" class="block text-sm font-medium text-gray-700 mb-1">Edad</label>
-                <input type="number" id="edad" name="edad" min="1" max="120" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="Ej. 28">
+            <div class="px-5 py-3 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                ADMINISTRACIÓN Y BI
             </div>
 
-            <!-- Fecha de Nacimiento -->
-            <div>
-                <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
-                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            </div>
+            <nav class="px-3 py-2 space-y-6 text-sm">
+                <div>
+                    <p class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Administración</p>
+                    <div class="space-y-1">
+                        <button onclick="switchView('configuracion', this)" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-gear w-5 text-slate-400"></i>
+                            <span>Configuración</span>
+                        </button>
+                    </div>
+                </div>
 
-            <!-- Correo Electrónico -->
-            <div>
-                <label for="correo" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
-                <input type="email" id="correo" name="correo" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="correo@ejemplo.com">
-            </div>
+                <div>
+                    <p class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Operaciones</p>
+                    <div class="space-y-1">
+                        <button onclick="switchView('clientes', this)" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-users w-5 text-slate-400"></i>
+                            <span>Clientes</span>
+                        </button>
+                        <button onclick="switchView('productos', this)" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-box-archive w-5 text-slate-400"></i>
+                            <span>Productos</span>
+                        </button>
+                        <button onclick="switchView('nuevaVenta', this)" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-cart-shopping w-5 text-slate-400"></i>
+                            <span>Nueva Venta</span>
+                        </button>
+                    </div>
+                </div>
 
-            <!-- Puesto -->
-            <div>
-                <label for="puesto" class="block text-sm font-medium text-gray-700 mb-1">Puesto</label>
-                <input type="text" id="puesto" name="puesto" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="Ej. Desarrollador Web">
-            </div>
-
-            <!-- Botón de Envío -->
-            <button type="submit"
-                class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition duration-200 shadow-md">
-                Enviar Formulario
-            </button>
-        </form>
-
-        <!-- Mensaje de éxito -->
-        <div id="mensajeExito" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded-lg text-center font-medium">
-            ¡Formulario enviado con éxito!
+                <div>
+                    <p class="px-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Análisis BI</p>
+                    <div class="space-y-1">
+                        <button onclick="switchView('dashboardGlobal', this)" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-blue-600 text-white font-medium shadow-md shadow-blue-600/20 text-left">
+                            <i class="fa-solid fa-chart-pie w-5"></i>
+                            <span>Dashboard Global</span>
+                        </button>
+                        <button onclick="switchView('biClientes', this)" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-user-group w-5 text-slate-400"></i>
+                            <span>BI Clientes</span>
+                        </button>
+                        <button onclick="switchView('biInventario', this)" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-warehouse w-5 text-slate-400"></i>
+                            <span>BI Sucursales</span>
+                        </button>
+                        <button onclick="switchView('biOperativo', this)" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+                            <i class="fa-solid fa-chart-line w-5 text-slate-400"></i>
+                            <span>BI Proyecciones</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
         </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+        <!-- TOP HEADER BAR -->
+        <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 shrink-0">
+            <div class="flex items-center space-x-2 text-slate-500 text-sm font-medium">
+                <span class="text-slate-400">#</span>
+                <span id="pageTitle" class="uppercase tracking-wider font-semibold text-slate-700">DASHBOARD GLOBAL</span>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div class="text-right">
+                    <p class="text-sm font-bold text-slate-800">Admin Master</p>
+                    <p class="text-[11px] text-slate-500 font-medium">Suscripción Premium</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT VIEWS CONTAINER -->
+        <main class="flex-1 overflow-y-auto p-8 space-y-6">
+
+            <!-- ================= VIEW 1: DASHBOARD GLOBAL ================= -->
+            <div id="view-dashboardGlobal" class="view-section active space-y-6">
+                <div class="space-y-4">
+                    <h2 class="text-xl font-bold text-slate-800 flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-column text-blue-600"></i>
+                        <span>Dashboard Financiero y Control de Ventas</span>
+                    </h2>
+
+                    <!-- Filters Bar -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">FECHA INICIO</label>
+                                <div class="relative">
+                                    <input type="text" id="fechaInicio" value="2021-01-01" class="w-36 bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+                                    <i class="fa-regular fa-calendar absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">FECHA FIN</label>
+                                <div class="relative">
+                                    <input type="text" id="fechaFin" value="2021-01-31" class="w-36 bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg px-3 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+                                    <i class="fa-regular fa-calendar absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="analizarDatosConFiltros()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>ANALIZAR DATOS</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI METRICS CARDS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">VENTAS TOTALES</span>
+                        <div id="kpiVentas" class="text-lg font-extrabold text-slate-800 mt-1">$0.00</div>
+                        <span class="text-[10px] text-slate-400 font-medium">Total Cobrado</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-500">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">UTILIDAD BRUTA</span>
+                        <div id="kpiUtilidad" class="text-lg font-extrabold text-slate-800 mt-1">$0.00</div>
+                        <span class="text-[10px] text-slate-400 font-medium">Ventas - Costo Total</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-cyan-500">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">MARGEN BRUTO</span>
+                        <div id="kpiMargen" class="text-lg font-extrabold text-slate-800 mt-1">0.0%</div>
+                        <span class="text-[10px] text-slate-400 font-medium">% Rentabilidad</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-400">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">PROYECCIÓN MES</span>
+                        <div id="kpiProyeccion" class="text-lg font-extrabold text-emerald-600">+0.0%</div>
+                        <span class="text-[10px] text-slate-400 font-medium">Estimado Cierre</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TICKET PROMEDIO</span>
+                        <div id="kpiTicket" class="text-base font-extrabold text-slate-800 mt-1">$0.00</div>
+                        <span class="text-[10px] text-slate-400 font-medium">Por Transacción</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-500">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CLIENTES ÚNICOS</span>
+                        <div id="kpiClientes" class="text-lg font-extrabold text-slate-800 mt-1">0</div>
+                        <span class="text-[10px] text-slate-400 font-medium">En el periodo</span>
+                    </div>
+                </div>
+
+                <!-- CHARTS SECTION -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 lg:col-span-1 flex flex-col justify-between">
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-line text-blue-600"></i>
+                            <span>Tendencia Diaria de Ventas</span>
+                        </h3>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-pie-chart text-emerald-500"></i>
+                            <span>Ventas por Sucursal</span>
+                        </h3>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-bar text-amber-500"></i>
+                            <span>Ventas por Categoría</span>
+                        </h3>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLE SECTION -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-table text-blue-600"></i>
+                        <span>Registro de Transacciones (Base de Datos)</span>
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">ID Cliente</th>
+                                    <th class="p-3">Fecha</th>
+                                    <th class="p-3">Sucursal</th>
+                                    <th class="p-3">Vendedor</th>
+                                    <th class="p-3">Categoría</th>
+                                    <th class="p-3">Producto</th>
+                                    <th class="p-3">Precio Total</th>
+                                    <th class="p-3">Costo Total</th>
+                                    <th class="p-3">Cantidad</th>
+                                    <th class="p-3">Total Cobrado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaVentasBody" class="divide-y divide-slate-200">
+                                <!-- Poblado por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: BI CLIENTES ================= -->
+            <div id="view-biClientes" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Análisis BI de Clientes</h2>
+                    <p class="text-sm text-slate-600 mb-6">Comportamiento de compra, frecuencia y volumen de gasto por cliente registrados en el sistema.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h4 class="font-bold text-slate-700 mb-2">Top Mejores Clientes (Por Total Cobrado)</h4>
+                            <ul id="biTopClientes" class="space-y-2 text-sm text-slate-600">
+                                <!-- Poblado por JS -->
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h4 class="font-bold text-slate-700 mb-2">Métricas de Retención</h4>
+                            <p class="text-sm text-slate-600">Tasa de recompra mensual estimada: <strong id="biRecompra" class="text-emerald-600">--</strong></p>
+                            <p class="text-sm text-slate-600 mt-2">Valor de vida del cliente (LTV): <strong id="biLTV" class="text-blue-600">--</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: BI SUCURSALES ================= -->
+            <div id="view-biInventario" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Análisis BI de Sucursales</h2>
+                    <p class="text-sm text-slate-600 mb-6">Rendimiento comercial y rentabilidad desglosada por sucursal física.</p>
+                    <div id="biSucursalesGrid" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- Poblado por JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 4: BI PROYECCIONES ================= -->
+            <div id="view-biOperativo" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Proyecciones y Análisis Financiero</h2>
+                    <p class="text-sm text-slate-600 mb-6">Proyecciones de crecimiento trimestral, análisis de diferencias de costos y margen de ganancia proyectado.</p>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                            <h4 class="font-bold text-blue-900 mb-1">Proyección Q2 2026</h4>
+                            <p class="text-sm text-blue-700">Se proyecta un incremento del <strong id="biProyeccionQ2">--</strong> en ventas impulsado por las categorías top en las sucursales principales.</p>
+                        </div>
+                        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                            <h4 class="font-bold text-emerald-900 mb-1">Margen de Ganancia Neto Estimado</h4>
+                            <p class="text-sm text-emerald-700">La diferencia media entre el precio total y el costo total reporta un margen bruto promedio de <strong id="biMargenNeto">--</strong>, respecto a la meta corporativa del 65%.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 5: CLIENTES ================= -->
+            <div id="view-clientes" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Gestión de Clientes</h2>
+                    <p class="text-sm text-slate-600 mb-4">Listado completo de clientes extraídos de la base de datos.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">ID Cliente</th>
+                                    <th class="p-3">DNI</th>
+                                    <th class="p-3">Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaClientesBody" class="divide-y divide-slate-200">
+                                <!-- Poblado por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 6: PRODUCTOS ================= -->
+            <div id="view-productos" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Catálogo de Productos y Categorías</h2>
+                    <p class="text-sm text-slate-600 mb-4">Productos registrados y sus categorías.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+                                <tr>
+                                    <th class="p-3">ID Producto</th>
+                                    <th class="p-3">Categoría</th>
+                                    <th class="p-3">Nombre Producto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaProductosBody" class="divide-y divide-slate-200">
+                                <!-- Poblado por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 7: NUEVA VENTA ================= -->
+            <div id="view-nuevaVenta" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-w-lg">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Registrar Nueva Venta</h2>
+                    <form onsubmit="alert('Venta registrada con éxito'); return false;" class="space-y-4 text-sm">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">ID Cliente</label>
+                            <input type="text" required class="w-full border border-slate-300 p-2 rounded-lg" placeholder="Ej: C025">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Sucursal</label>
+                            <select class="w-full border border-slate-300 p-2 rounded-lg">
+                                <option>Victoria</option>
+                                <option>Abasto</option>
+                                <option>Villa Grande</option>
+                                <option>San Genaro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Vendedor</label>
+                            <input type="text" required class="w-full border border-slate-300 p-2 rounded-lg" placeholder="Nombre del vendedor">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Total Cobrado ($)</label>
+                            <input type="number" step="0.01" required class="w-full border border-slate-300 p-2 rounded-lg" placeholder="0.00">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold shadow">Guardar Venta</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 8: CONFIGURACION ================= -->
+            <div id="view-configuracion" class="view-section space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-w-2xl">
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-sliders text-blue-600"></i>
+                        <span>Material UI Configurator</span>
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-6">Personaliza las opciones del panel y carga tu base de datos de Excel.</p>
+
+                    <div class="mb-6 pb-6 border-b border-slate-200">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-3">Sidebar Colors</label>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="setSidebarColor('#db2777', this)" class="color-dot w-7 h-7 rounded-full bg-pink-600 focus:outline-none"></button>
+                            <button onclick="setSidebarColor('#0f172a', this)" class="color-dot w-7 h-7 rounded-full bg-slate-900 ring-4 ring-offset-2 ring-blue-400 focus:outline-none"></button>
+                            <button onclick="setSidebarColor('#2563eb', this)" class="color-dot w-7 h-7 rounded-full bg-blue-600 focus:outline-none"></button>
+                            <button onclick="setSidebarColor('#22c55e', this)" class="color-dot w-7 h-7 rounded-full bg-green-600 focus:outline-none"></button>
+                            <button onclick="setSidebarColor('#f59e0b', this)" class="color-dot w-7 h-7 rounded-full bg-amber-500 focus:outline-none"></button>
+                            <button onclick="setSidebarColor('#dc2626', this)" class="color-dot w-7 h-7 rounded-full bg-red-600 focus:outline-none"></button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 pb-6 border-b border-slate-200">
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Sidenav Type</label>
+                        <p class="text-[11px] text-slate-400 mb-3">Elige entre los diferentes tipos de sidenav.</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="setSidenavType('dark')" class="border border-slate-300 py-2 rounded-lg text-xs font-semibold hover:border-blue-600 focus:border-blue-600">Dark</button>
+                            <button onclick="setSidenavType('transparent')" class="border border-slate-300 py-2 rounded-lg text-xs font-semibold hover:border-blue-600 focus:border-blue-600">Transparent</button>
+                            <button onclick="setSidenavType('white')" class="border border-slate-300 py-2 rounded-lg text-xs font-semibold hover:border-blue-600 focus:border-blue-600">White</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 pb-6 border-b border-slate-200 flex items-center justify-between">
+                        <div>
+                            <span class="block text-xs font-bold text-slate-700 uppercase">Navbar Fixed</span>
+                            <span class="text-[11px] text-slate-400">Fijar la barra superior al hacer scroll.</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" onchange="toggleNavbarFixed(this)" class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+
+                    <div class="mb-6 pb-6 border-b border-slate-200 flex items-center justify-between">
+                        <div>
+                            <span class="block text-xs font-bold text-slate-700 uppercase">Light / Dark Mode</span>
+                            <span class="text-[11px] text-slate-400">Alternar tema general del panel.</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" onchange="toggleDarkMode(this)" class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+
+                    <!-- Carga de Excel Inteligente para MongoDB -->
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl space-y-3">
+                        <h3 class="font-bold text-blue-900 text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-file-excel text-emerald-600"></i>
+                            <span>Carga de Excel & Limpieza Automática (MongoDB)</span>
+                        </h3>
+                        <p class="text-xs text-blue-700">Paso 1: Sube y valida tu archivo Excel. El sistema aplicará la limpieza matemática y te mostrará el reporte. Paso 2: Si todo está OK, haz clic en Guardar en MongoDB.</p>
+
+                        <div class="flex items-center space-x-3">
+                            <input type="file" id="excelFile" accept=".csv, .xlsx, .xls" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                            <button onclick="validarYPrevisualizarExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition shrink-0 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>Cargar y Validar</span>
+                            </button>
+                        </div>
+
+                        <div id="mensajeExitoCarga" class="hidden p-3 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-semibold text-center">
+                            ¡Archivo validado y limpiado correctamente! Revisa el reporte abajo.
+                        </div>
+
+                        <div id="panelAuditoria" class="hidden mt-4 bg-white border border-slate-300 p-4 rounded-xl space-y-3 text-slate-700">
+                            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center space-x-2">
+                                <i class="fa-solid fa-clipboard-check text-blue-600"></i>
+                                <span>Reporte de Auditoría y Limpieza del Excel</span>
+                            </h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    <span class="font-bold block mb-1 text-slate-600">📊 Filas Procesadas por Tabla:</span>
+                                    <ul id="resumenTablas" class="space-y-1"></ul>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    <span class="font-bold block mb-1 text-slate-600">🛠️ Errores / Valores Corregidos:</span>
+                                    <p class="text-xs mb-2">Total celdas reparadas automáticamente: <strong id="totalErroresCorregidos" class="text-amber-600">0</strong></p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="font-bold block text-xs text-slate-600 mb-1">🔍 Detalle de correcciones aplicadas:</span>
+                                <ul id="detalleCorrecciones" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mt-3 mb-1">Vista Previa JSON (MongoDB Payload):</label>
+                            <textarea id="jsonOutput" rows="5" readonly class="w-full bg-slate-900 text-emerald-400 font-mono text-[11px] p-3 rounded-lg focus:outline-none" placeholder="Aquí aparecerá el JSON estructurado para MongoDB..."></textarea>
+                        </div>
+
+                        <div id="seccionGuardarMongo" class="hidden pt-2 border-t border-blue-200">
+                            <button id="btnGuardarMongo" onclick="guardarEnMongoDB()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 rounded-lg shadow-md transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-database"></i>
+                                <span>Guardar en MongoDB (ventas_ipesa)</span>
+                            </button>
+                            <div id="mensajeExitoMongo" class="hidden mt-2 p-3 bg-blue-100 text-blue-800 rounded-lg text-xs font-semibold text-center"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <script>
-        function handleSubmit(event) {
-            event.preventDefault();
-            
-            // Aquí puedes procesar los datos o enviarlos a un servidor
-            const formData = {
-                nombre: document.getElementById('nombre').value,
-                edad: document.getElementById('edad').value,
-                fechaNacimiento: document.getElementById('fechaNacimiento').value,
-                correo: document.getElementById('correo').value,
-                puesto: document.getElementById('puesto').value
-            };
-
-            console.log('Datos del formulario:', formData);
-
-            // Mostrar mensaje de éxito y limpiar formulario
-            document.getElementById('mensajeExito').classList.remove('hidden');
-            document.getElementById('registroForm').reset();
-
-            setTimeout(() => {
-                document.getElementById('mensajeExito').classList.add('hidden');
-            }, 4000);
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
