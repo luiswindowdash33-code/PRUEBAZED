@@ -1,0 +1,53 @@
+/* ==========================================================
+   SOLIS ENTERPRISES - ESTILOS PROFESIONALES DE CONTROL DE VENTAS
+   ========================================================== */
+
+/* Estilos para Flatpickr (Calendario compacto y elegante) */
+.flatpickr-calendar {
+    width: 250px !important;
+    padding: 10px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.flatpickr-months {
+    margin-bottom: 5px !important;
+}
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    height: 35px !important;
+}
+
+.flatpickr-weekdays {
+    margin-bottom: 5px !important;
+}
+
+.flatpickr-day {
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    font-size: 12px !important;
+    margin: 2px !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+    font-size: 13px !important;
+}
+
+/* Control de esquema de color para inputs */
+html, body, input[type="text"] {
+    color-scheme: light !important;
+}
+
+/* Clases para manejo de vistas */
+.view-section {
+    display: none;
+}
+
+.view-section.active {
+    display: block;
+}
